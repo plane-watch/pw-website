@@ -1,0 +1,5 @@
+/* Increase the brightness of TOC font colour */
+:is(.dark .toc a) {
+    --tw-text-opacity: 1;
+    color: rgba(var(--color-neutral-100), var(--tw-text-opacity));
+}

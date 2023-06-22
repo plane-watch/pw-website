@@ -1,0 +1,135 @@
+{{ define "main" }}
+{{ .Scratch.Set "scope" "single" }}
+
+<article>
+    <!-- Hero Image -->
+    {{ if .Params.showHero | default (.Site.Params.article.showHero | default false) }}
+    {{ $heroStyle := .Params.heroStyle }}
+    {{ if not $heroStyle }}{{ $heroStyle = .Site.Params.article.heroStyle }}{{ end }}
+    {{ $heroStyle := print "partials/hero/" $heroStyle ".html" }}
+    {{ if templates.Exists $heroStyle }}
+    {{ partial $heroStyle . }}
+    {{ else }}
+    {{ partial "partials/hero/basic.html" . }}
+    {{ end }}
+    {{ end }}
+    <!-- Header -->
+    <header id="single_header" class="mt-5 max-w-prose">
+        {{ if .Params.showBreadcrumbs | default (.Site.Params.article.showBreadcrumbs | default false) }}
+        {{ partial "breadcrumbs.html" . }}
+        {{ end }}
+        <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+            {{ .Title | emojify }}
+        </h1>
+        <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+            {{ partial "article-meta/basic.html" (dict "context" . "scope" "single") }}
+        </div>
+    </header>
+    <!-- Background Image -->
+    <div class="fixed inset-x-0 top-0" style="z-index:-10">
+        {{ $homepageImage := "" }}
+        {{ with .Site.Params.defaultBackgroundImage }}{{ $homepageImage = resources.Get . }}{{ end }}
+        {{ with .Site.Params.homepage.homepageImage }}{{ $homepageImage = resources.Get . }}{{ end }}
+        {{ if not (eq $homepageImage "") }}
+        <img class="w-full h-[1000px] object-cover m-0 nozoom" src="{{ $homepageImage.RelPermalink }}" role="presentation">
+        <div
+            class="absolute inset-0 h-[1000px] bg-gradient-to-t from-neutral dark:from-neutral-800 to-transparent mix-blend-normal">
+        </div>
+        <div
+            class="opacity-60 absolute inset-0 h-[1000px] bg-gradient-to-t from-neutral dark:from-neutral-800 to-neutral-100 dark:to-neutral-800 mix-blend-normal">
+        </div>
+        {{ end }}
+    </div>
+    <!-- Article TOC -->
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+        {{ if or (and (.Params.showTableOfContents | default (.Site.Params.article.showTableOfContents | default false))
+        (in
+        .TableOfContents "<ul")) (.Site.Params.article.showRelatedPosts | default false) }} <div
+            class="order-first sm:max-w-prose lg:ml-auto px-0 lg:order-last lg:max-w-xs ltr:lg:pl-8 rtl:lg:pr-8">
+            <div class="toc ltr:pl-5 rtl:pr-5 print:hidden lg:sticky {{ if eq .Site.Params.header.layout " fixed" }}
+                lg:top-[140px] {{ else }} lg:top-10 {{ end }}">
+
+                {{ if and (.Params.showTableOfContents | default (.Site.Params.article.showTableOfContents | default
+                false)) (in
+                .TableOfContents "<ul") }} {{ partial "toc.html" . }} {{ end }} {{ if
+                    .Site.Params.article.showRelatedPosts | default false }} sd {{ end }} </div>
+            </div>
+            {{ end }}
+            <div class="min-w-0 min-h-0 max-w-prose dark:!text-neutral">
+                {{ partial "series.html" . }}
+                <!-- Content -->
+                {{ .Content | emojify }}
+                </br></br>
+                {{ partial "series-closed.html" . }}
+            </div>
+
+            <script>
+                var oid = "views_{{ .File.Path }}"
+                var oid_likes = "likes_{{ .File.Path }}"
+            </script>
+            {{ $jsPage := resources.Get "js/page.js" }}
+            {{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint "sha512" }}
+            <script type="text/javascript" src="{{ $jsPage.RelPermalink }}"
+                integrity="{{ $jsPage.Data.Integrity }}"></script>
+
+    </section>
+    <!-- Footer and Author details -->
+    <footer class="pt-8 max-w-prose print:hidden">
+
+        {{ partial "author.html" . }}
+
+        {{ $authorsData := .Site.Data.authors }}
+        {{ $taxonomies := .Site.Taxonomies.authors }}
+        {{ $baseURL := .Site.BaseURL }}
+
+        {{ if not (strings.HasSuffix $baseURL "/") }}
+        {{ $baseURL = delimit (slice $baseURL "/") "" }}
+        {{ end }}
+
+        {{ range $author := .Page.Params.authors }}
+        {{ $authorData := index $authorsData $author }}
+        {{- if $authorData -}}
+
+        {{ $taxonomyLink := 0 }}
+        {{ range $taxonomyname, $taxonomy := $taxonomies }}
+        {{ if (eq $taxonomyname $author) }}
+        {{ $taxonomyLink = delimit (slice $baseURL "/authors/" $author) "" }}
+        {{ end }}
+        {{ end }}
+
+        {{ partial "author-extra.html" (dict "context" . "data" $authorData "link" $taxonomyLink) }}
+        {{- end -}}
+        {{ end }}
+
+        {{ partial "sharing-links.html" . }}
+
+        {{ partial "related.html" . }}
+
+        {{ partial "article-pagination.html" . }}
+        {{ if .Params.showComments | default (.Site.Params.article.showComments | default false) }}
+        {{ if templates.Exists "partials/comments.html" }}
+        <div class="pt-3">
+            <hr class="border-dotted border-neutral-300 dark:border-neutral-600" />
+            <div class="pt-3">
+                {{ partial "comments.html" . }}
+            </div>
+        </div>
+        {{ else }}
+        {{ warnf "[BLOWFISH] Comments are enabled for %s but no comments partial exists." .File.Path }}
+        {{ end }}
+        {{ end }}
+    </footer>
+</article>
+<!-- Background Blur Effect -->
+{{ if .Site.Params.homepage.layoutBackgroundBlur | default false }}
+<div id="background-blur"
+    class="fixed opacity-0 inset-x-0 top-0 h-full single_hero_background nozoom backdrop-blur-2xl"></div>
+<script>
+    window.addEventListener('scroll', function (e) {
+        var scroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        var background_blur = document.getElementById('background-blur');
+        background_blur.style.opacity = (scroll / 300)
+    });
+</script>
+{{ end }}
+{{ end }}
