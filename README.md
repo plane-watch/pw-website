@@ -71,3 +71,6 @@ Running in Fast Render Mode. For full rebuilds on change: hugo server --disableF
 Web Server is available at http://localhost:1313/ (bind address 127.0.0.1)
 Press Ctrl+C to stop
 ```
+
+## Deployment
+Deploying a hugo website is easy, running `hugo` will generate a set of static assets inside the `public` directory that can be hosted from a plain old web server. Before doing this, ensure the TailwindCSS has been compiled and it present in the `assets/css/compiled` directory.
