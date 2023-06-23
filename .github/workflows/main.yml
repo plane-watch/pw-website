@@ -37,11 +37,15 @@ jobs:
         run: hugo --minify
         
       - name: "Deploy"
+        # https://github.com/marketplace/actions/ftp-sftp-file-deployer
         uses: milanmk/actions-file-deployer@master
         with:
           remote-protocol: "sftp"
           remote-host: "shell.webinabox.net"
           remote-user: "plane.watch"
-          ssh-private-key: ${{ secrets.WIAB_PW_SSH_PW }}
+          remote-password: ${{ secrets.WIAB_PW_SSH_PW }}
+          # only upload the "compiled" static HTML source.
+          local-path: "./public/"
           remote-path: "/srv/web/domains/p/plane.watch/public_html"
+          sync: full
 
