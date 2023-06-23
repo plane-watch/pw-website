@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: 19.x
           cache: npm
+          cache-dependency-path: themes/blowfish/package-lock.json
         
       - name: Install required node modules
         run: |
