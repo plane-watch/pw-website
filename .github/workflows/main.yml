@@ -49,7 +49,8 @@ jobs:
           remote-path: "/srv/web/domains/p/plane.watch/public_html"
           sync: full
       
-      - name: Status 
+      - name: Status
+        id: status
         uses: ASzc/change-string-case-action@v5
         with:
           string: ${{ job.status }}
