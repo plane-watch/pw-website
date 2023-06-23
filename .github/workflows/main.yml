@@ -1,0 +1,46 @@
+name: Plane Watch Website - Deploy
+'on':
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+       
+      - name: Use Node.js 19.x
+        uses: actions/checkout@v3
+        with:
+          node-version: 19.x
+          cache: npm
+        
+      - name: Install required node modules
+        run: |
+          cd themes/blowfish
+          npm install
+
+      - name: Compile CSS
+        run: npm run build
+      
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.110.0'
+          
+      - name: Build Hugo
+        run: hugo --minify
+        
+      - name: "Deploy"
+        uses: milanmk/actions-file-deployer@master
+        with:
+          remote-protocol: "sftp"
+          remote-host: "shell.webinabox.net"
+          remote-user: "plane.watch"
+          ssh-private-key: ${{ secrets.WIAB_PW_SSH_PW }}
+          remote-path: "/srv/web/domains/p/plane.watch/public_html"
+
