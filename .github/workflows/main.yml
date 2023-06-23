@@ -36,7 +36,7 @@ jobs:
       - name: Build Hugo
         run: hugo --minify
         
-      - name: "Deploy"
+      - name: Deploy to WIAB
         # https://github.com/marketplace/actions/ftp-sftp-file-deployer
         uses: milanmk/actions-file-deployer@master
         with:
@@ -48,4 +48,23 @@ jobs:
           local-path: "./public/"
           remote-path: "/srv/web/domains/p/plane.watch/public_html"
           sync: full
+      
+      - name: Status 
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ job.status }}
+
+      - uses: cl8dep/action-discord@0.1
+        name: Discord notification [SUCCESS]
+        if: ${{ steps.status.outputs.uppercase == 'SUCCESS'}}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          message: ✅ Website Deploy (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+      - uses: cl8dep/action-discord@0.1
+        name: Discord notification [FAILURE]
+        if: ${{ steps.status.outputs.uppercase == 'FAILURE'}}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          message: ❌ Website Deploy (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
