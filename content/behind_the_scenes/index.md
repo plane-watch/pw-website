@@ -12,6 +12,7 @@ This article aims to explain how we at [plane.watch][plane.watch] have architect
 
 ## Overview ##
 
+![plane.watch back-end diagram](Architecture%20Overview.drawio.png)
 
 ## ADS-B Traffic Control (ATC) ##
 
