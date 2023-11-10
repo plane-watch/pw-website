@@ -10,9 +10,18 @@ How the sausage is made. The sometimes unpleasant way in which a process or acti
 
 This article aims to explain how we at [plane.watch][plane.watch] have architected the back-end. It may provide insight to those of you curious to what happens to the data you send us.
 
-## Overview ##
-
 ![plane.watch back-end diagram](Architecture%20Overview.drawio.png)
+
+### Anatomy of a Connection ###
+
+![plane.watch feeder connection anatomy](Connection%20Anatomy.drawio.png)
+
+1. [pw-feeder][pw-feeder] opens two connections to [Bordercontrol](#bordercontrol) - one connection for [BEAST][beast protocol], and another for [MLAT][mlat-client].
+2. During connection establishment, [Bordercontrol](#bordercontrol) checks the validity of the feeder's API key. If invalid, the connection is dropped. If valid, the connection is allowed, and [bordercontrol](#bordercontrol) starts a "feed-in" container for the client.
+3. Bordercontrol proxies [BEAST][beast protocol] traffic to the feed-in container.
+4. Bordercontrol proxies [MLAT][mlat-client] traffic to an [mlat_server][mlat-server] instance running on the regional multiplexer.
+5. For the "new" environment, [pw_ingest](#pw_ingest) running within the feed-in container decodes the [BEAST][beast protocol] data, and publishes the data as a message onto the NATS message bus. The data is processed through the [pw-pipeline][pw-pipeline].
+6. For the "legacy" environment, the [BEAST][beast protocol] data for each region is multiplexed in each regional multiplexer. Virtual Radar Server then consumes this data for the legacy front-end.
 
 ## ADS-B Traffic Control (ATC) ##
 
