@@ -6,13 +6,16 @@ menu:
 showDate: false
 draft: false
 ---
+
+## Overview ##
+
 How the sausage is made. The sometimes unpleasant way in which a process or activity is carried on behind the scenes...
 
 This article aims to explain how we at [plane.watch][plane.watch] have architected the back-end. It may provide insight to those of you curious to what happens to the data you send us.
 
 ![plane.watch back-end diagram](Architecture%20Overview.drawio.png)
 
-### Anatomy of a Connection ###
+## Anatomy of a Connection ##
 
 ![plane.watch feeder connection anatomy](Connection%20Anatomy.drawio.png)
 
@@ -23,7 +26,9 @@ This article aims to explain how we at [plane.watch][plane.watch] have architect
 5. For the "new" environment, [pw_ingest](#pw_ingest) running within the feed-in container decodes the [BEAST][beast protocol] data, and publishes the data as a message onto the NATS message bus. The data is processed through the [pw-pipeline][pw-pipeline].
 6. For the "legacy" environment, the [BEAST][beast protocol] data for each region is multiplexed in each regional multiplexer. Virtual Radar Server then consumes this data for the legacy front-end.
 
-## ADS-B Traffic Control (ATC) ##
+## Component Detail ##
+
+### ADS-B Traffic Control (ATC) ###
 
 [ATC][atc] is [plane.watch][plane.watch]'s feeder portal. It provides:
 
@@ -38,7 +43,7 @@ The private API is used to:
 * Authenticate feeders upon connection to [bordercontrol](#bordercontrol)
 * Provide aircraft types, airports, routes, operators and waypoints to the [Enrichment Centre](#pw-enrichment)
 
-## pw-feeder ##
+### pw-feeder ###
 
 [pw-feeder][pw-feeder], simply put, it is a [BEAST][beast protocol] and [MLAT][mlat] protocol specific [stunnel][stunnel] client, that securely proxies data from the client to [plane.watch][plane.watch]'s servers (specifically [bordercontrol](#bordercontrol) - see below).
 
@@ -46,7 +51,7 @@ The private API is used to:
 
 [Stunnel][stunnel] is used to ensure that the data you send to us is encrypted and tamper resistant. Furthermore, we send the feeder's plane.watch API key in the TLS request's [Server Name Indication (SNI)][sni] field, allowing us to determine which data is associated to which feeder.
 
-## bordercontrol ##
+### bordercontrol ###
 
 **Bordercontrol** is our custom-written feed receiver. Its job is to handle the many incoming connections from feeders running our [pw-feeder][pw-feeder] client software.
 
@@ -58,23 +63,23 @@ When a [pw-feeder][pw-feeder] client connects:
 4. The incoming [BEAST][beast protocol] connection is proxied to the feed-in container.
 5. The incoming [MLAT][mlat] connection is proxied to an instance of [mlat-server][mlat-server] running on the regional multiplexer.
 
-## pw_ingest ##
+### pw_ingest ###
 
 [**pw_ingest**][pw-pipeline] runs on each feed-in container. It decodes [BEAST][beast protocol] protocol frames, and publishes the data as messages to [NATS][nats], for processing through the [plane.watch pipeline][pw-pipeline]. Messages are tagged with the feeder's API key, so the source of the data can be tracked throughout the processing pipeline.
 
-## pw-enrichment ##
+### pw-enrichment ###
 
 **pw-enrichment** consumes decoded ADS-B frames from the [NATS][nats] message queue and adds additional information relating to the plane, route and other items.
 
-## pw_router ##
+### pw_router ###
 
 [**pw_router**][pw-pipeline] takes enriched data and reduces it down to significant events. Optionally, it will publish messages out to individual tile queues for low and high speed updates.
 
-## pw_ws_broker ##
+### pw_ws_broker ###
 
 [**pw_ws_broker**][pw-pipeline] provides the aircraft position data to website clients. When [pw-ui](#pw-ui) is rendered on the client's browser, the client starts a websocket session and requests which tiles it are interested in (depending on which part of the world they are looking at, and what zoom level).
 
-## pw-ui ##
+### pw-ui ###
 
 **pw-ui** provides the client HTML, CSS and Javascript for [beta.plane.watch][beta].
 
