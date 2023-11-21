@@ -9,14 +9,10 @@ draft: false
 
 ## Overview ##
 
-How the sausage is made. The sometimes unpleasant way in which a process or activity is carried on behind the scenes...
+This article aims to explain how we have re-designed and re-written the backend used to collect, enrich and display the ADSB data our community sends us. 
 
-This article aims to explain how we at [plane.watch][plane.watch] have architected the back-end. It may provide insight to those of you curious to what happens to the data you send us.
-
-![plane.watch back-end diagram](Architecture%20Overview.drawio.png)
-
-## Anatomy of a Connection ##
-
+## Anatomy of a Feeder Connection ##
+When you follow our [docker_planewatch] 
 ![plane.watch feeder connection anatomy](Connection%20Anatomy.drawio.png)
 
 1. [pw-feeder][pw-feeder] opens two connections to [Bordercontrol](#bordercontrol) - one connection for [BEAST][beast protocol], and another for [MLAT][mlat-client].
@@ -26,7 +22,7 @@ This article aims to explain how we at [plane.watch][plane.watch] have architect
 5. For the "new" environment, [pw_ingest](#pw_ingest) running within the feed-in container decodes the [BEAST][beast protocol] data, and publishes the data as a message onto the NATS message bus. The data is processed through the [pw-pipeline][pw-pipeline].
 6. For the "legacy" environment, the [BEAST][beast protocol] data for each region is multiplexed in each regional multiplexer. Virtual Radar Server then consumes this data for the legacy front-end.
 
-## Component Detail ##
+## Components ##
 
 ### ADS-B Traffic Control (ATC) ###
 
@@ -69,21 +65,29 @@ When a [pw-feeder][pw-feeder] client connects:
 
 ### pw-enrichment ###
 
-**pw-enrichment** consumes decoded ADS-B frames from the [NATS][nats] message queue and adds additional information relating to the plane, route and other items.
+**pw-enrichment**, also known as EC (enrichment centre), consumes decoded ADS-B frames from the [NATS][nats] message queue and adds additional information relating to the aircraft, route and other metadata. The EC maintains an internal memory-cache so as to not overwhelm the ATC database, given the message rate can be in the thousands of messages a second.
 
 ### pw_router ###
 
-[**pw_router**][pw-pipeline] takes enriched data and reduces it down to significant events. Optionally, it will publish messages out to individual tile queues for low and high speed updates.
+[**pw_router**][pw-pipeline] takes enriched data and reduces it down to significant events, thus cutting the message rate significantly. The router also publishes two feeds to the NATS bus - a high resolution and a low resolution - these are used in the UI to not overwhelm the browser with messages.
+
+Router also connects to an instance of [ClickHouse], a highly scalable columnar database designed for storing timeseries data - perfect for ADSB. Both high and low resolution feeds are stored to Clickhouse for later analysis and for drawing the historical paths in the UI.
 
 ### pw_ws_broker ###
 
-[**pw_ws_broker**][pw-pipeline] provides the aircraft position data to website clients. When [pw-ui](#pw-ui) is rendered on the client's browser, the client starts a websocket session and requests which tiles it are interested in (depending on which part of the world they are looking at, and what zoom level).
+[**pw_ws_broker**][pw-pipeline] is a horizontally scalable service that provides a [WebSocket][websocket] interface to connect the public web interface with the backend pipeline. When a user loads the public website, a websocket is dialed up to this service to stream ADSB updates from the pipeline directly to the user.
+
+The broker also provides streaming APIs for querying ATC for more detailed route and airframe information as well as querying ClickHouse for historical track information.
+
 
 ### pw-ui ###
 
-**pw-ui** provides the client HTML, CSS and Javascript for [beta.plane.watch][beta].
+**pw-ui** is a lightweight Ruby on Rails app that serves the HTML/CSS/Javascript for the [beta.plane.watch][beta] frontend. [Stimulus] is the Javascript framework we chose as it models functionality through flexible controllers that integrate with HTML, in-line, to bind dynamic behaviour. 
+
+The map view is based on the [OpenLayers] framework which provides a high-performance interface to the HTML Canvas API or WebGL. 
 
 <!-- links -->
+[docker_planewatch]: https://github.com/plane-watch/docker-plane-watch "Docker Plane Watch"
 [beast protocol]: https://github.com/firestuff/adsb-tools/blob/master/protocols/beast.md
 [dump1090]: https://github.com/flightaware/dump1090 "dump1090"
 [mlat]: https://www.icao.int/APAC/Documents/edocs/mlat_concept.pdf "Multilateration (MLAT)"
@@ -99,3 +103,7 @@ When a [pw-feeder][pw-feeder] client connects:
 [pw-pipeline]: https://github.com/plane-watch/pw-pipeline "Plane.Watch Pipeline"
 [nats]: https://nats.io "NATS.io"
 [beta]: https://beta.plane.watch "beta.plane.watch"
+[clickhouse]: https://github.com/ClickHouse/ClickHouse?utm_source=clickhouse&utm_medium=website&utm_campaign=website-nav "ClickHouse"
+[websocket]: https://en.wikipedia.org/wiki/WebSocket "WebSocket"
+[stimulus]: https://en.wikipedia.org/wiki/WebSocket "Stimulus"
+[openlayers]: https://openlayers.org "OpenLayers"
