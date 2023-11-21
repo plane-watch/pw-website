@@ -95,7 +95,7 @@ We are aiming to launch our new UI (currently accessible via [https://beta.plane
 * [Join our Discord][pwdiscord]. Come say G'day!
 * [Become a Feeder][pwgettingstarted]. Share your ADSB data!
 * [Contribute Financially][pwpatreon]. Help us fund our server and hosting costs!
-* Submit code to our repositories. We would recommend discussing your proposed code changes in our Discord prior to submitting any pull requests.
+* Submit code to our repositories. We recommend discussing your proposed code changes in our Discord prior to submitting any pull requests.
 
 <!-- links -->
 [docker_planewatch]: https://github.com/plane-watch/docker-plane-watch "Docker Plane Watch"
