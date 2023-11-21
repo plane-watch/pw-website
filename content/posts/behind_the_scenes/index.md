@@ -1,10 +1,6 @@
 ---
 title: "Behind The Scenes"
-menu:
-  main:
-    weight: 1
-showDate: false
-draft: false
+date: "2023-11-21"
 ---
 
 ## Overview ##
@@ -90,7 +86,7 @@ The map view is based on the [OpenLayers] framework which provides a high-perfor
 
 We are aiming to launch our new UI (currently accessible via [https://beta.plane.watch][beta]) in December of 2023. At this point in time, our private [GitHub repositories][pwgithub] will become public, making this project fully open source.
 
-### How Can I Get Involved? ###
+## How Can I Get Involved? ##
 
 * [Join our Discord][pwdiscord]. Come say G'day!
 * [Become a Feeder][pwgettingstarted]. Share your ADSB data!
