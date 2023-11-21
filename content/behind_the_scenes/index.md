@@ -86,6 +86,17 @@ The broker also provides streaming APIs for querying ATC for more detailed route
 
 The map view is based on the [OpenLayers] framework which provides a high-performance interface to the HTML Canvas API or WebGL. 
 
+## In Conclusion ##
+
+We are aiming to launch our new UI (currently accessible via [https://beta.plane.watch][beta]) in December of 2023. At this point in time, our private [GitHub repositories][pwgithub] will become public, making this project fully open source.
+
+### How Can I Get Involved? ###
+
+* [Join our Discord][pwdiscord]. Come say G'day!
+* [Become a Feeder][pwgettingstarted]. Share your ADSB data!
+* [Contribute Financially][pwpatreon]. Help us fund our server and hosting costs!
+* Submit code to our repositories. We would recommend discussing your proposed code changes in our Discord prior to submitting any pull requests.
+
 <!-- links -->
 [docker_planewatch]: https://github.com/plane-watch/docker-plane-watch "Docker Plane Watch"
 [beast protocol]: https://github.com/firestuff/adsb-tools/blob/master/protocols/beast.md
@@ -107,3 +118,7 @@ The map view is based on the [OpenLayers] framework which provides a high-perfor
 [websocket]: https://en.wikipedia.org/wiki/WebSocket "WebSocket"
 [stimulus]: https://en.wikipedia.org/wiki/WebSocket "Stimulus"
 [openlayers]: https://openlayers.org "OpenLayers"
+[pwgithub]: https://github.com/orgs/plane-watch/repositories "plane.watch GitHub"
+[pwdiscord]: https://discord.gg/wgDRk8JZCt "Join our Discord!"
+[pwgettingstarted]: https://web.plane.watch/getting_started/ "Getting Started"
+[pwpatreon]: https://www.patreon.com/planewatch "Support us on Patreon"
