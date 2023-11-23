@@ -15,10 +15,10 @@ When you follow our [Getting Started Guide](/getting_started):
 2. During connection establishment, [Bordercontrol](#bordercontrol) checks the validity of the feeder's API key. If invalid, the connection is dropped. If valid, the connection is allowed, and [bordercontrol](#bordercontrol) starts a "feed-in" container for the client.
 3. Bordercontrol proxies [BEAST][beast protocol] traffic to the feed-in container.
 4. Bordercontrol proxies [MLAT][mlat-client] traffic to an [mlat_server][mlat-server] instance running on the regional multiplexer.
-5. [pw_ingest](#pw_ingest) runs within the feed-in container, decodes the [BEAST][beast protocol] data, and publishes the data as a message onto the NATS message bus. 
+5. [pw_ingest](#pw_ingest) runs within the feed-in container, decodes the [BEAST][beast protocol] data, and publishes the data as a message onto the NATS message bus.
 6. [pw_ingest](#pw_ingest) runs within the regional multiplexer containers, decodes the [BEAST][beast protocol]-formatted MLAT results, and publishes the data as a message onto the NATS message bus.
-7. The data is processed through the [pw-pipeline][pw-pipeline].
-8. Once data flows through the pipeline, it's enriched before being displayed to the user via a websocket that connects the frontend website to the output of the pipeline.
+7. The data is processed through the [pw-pipeline][pw-pipeline], and is enriched before...
+8. ...being displayed to the user via a websocket that connects the frontend website to the output of the pipeline.
 
 ## Components ##
 
