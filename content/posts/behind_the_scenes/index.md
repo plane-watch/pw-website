@@ -16,7 +16,7 @@ When you follow our [Getting Started Guide](/getting_started):
 3. Bordercontrol proxies [BEAST][beast protocol] traffic to the feed-in container.
 4. Bordercontrol proxies [MLAT][mlat-client] traffic to an [mlat_server][mlat-server] instance running on the regional multiplexer.
 5. [pw_ingest](#pw_ingest) runs within the feed-in container, decodes the [BEAST][beast protocol] data, and publishes the data as a message onto the NATS message bus. The data is processed through the [pw-pipeline][pw-pipeline].
-6. Once data flow through the pipeline, it's enriched before being displayed to the user via a websocket that connects the frontend website to the pipeline.
+6. Once data flows through the pipeline, it's enriched before being displayed to the user via a websocket that connects the frontend website to the output of the pipeline.
 
 ## Components ##
 
@@ -37,7 +37,7 @@ The private API is used to:
 
 ### pw-feeder ###
 
-[pw-feeder][pw-feeder], it is a [BEAST][beast protocol] and [MLAT][mlat] protocol specific [stunnel][stunnel] client, that securely proxies data from the client to [plane.watch][plane.watch]'s servers, specifically [bordercontrol](#bordercontrol).
+[pw-feeder][pw-feeder] is a [BEAST][beast protocol] and [MLAT][mlat] protocol specific [stunnel][stunnel] client, that securely proxies data from the client to [plane.watch][plane.watch]'s servers, specifically [bordercontrol](#bordercontrol).
 
 [pw-feeder][pw-feeder] runs on the feeder client computer, and receives [BEAST protocol][beast protocol] data from software such as [dump1090][dump1090] and [readsb][readsb], or from hardware devices such as the [Jetvision Radarcape][radarcape]. It also communicates with [mlat-client][mlat-client] software running on the client, and mlat-server software running within [plane.watch][plane.watch].
 
@@ -112,7 +112,7 @@ We are aiming to launch our new UI (currently accessible via [https://beta.plane
 [beta]: https://beta.plane.watch "beta.plane.watch"
 [clickhouse]: https://github.com/ClickHouse/ClickHouse?utm_source=clickhouse&utm_medium=website&utm_campaign=website-nav "ClickHouse"
 [websocket]: https://en.wikipedia.org/wiki/WebSocket "WebSocket"
-[stimulus]: https://en.wikipedia.org/wiki/WebSocket "Stimulus"
+[stimulus]: https://stimulus.hotwired.dev "Stimulus"
 [openlayers]: https://openlayers.org "OpenLayers"
 [pwgithub]: https://github.com/orgs/plane-watch/repositories "plane.watch GitHub"
 [pwdiscord]: https://discord.gg/wgDRk8JZCt "Join our Discord!"
