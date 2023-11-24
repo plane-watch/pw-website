@@ -2,7 +2,7 @@
 title: "About Us"
 menu:
   main:
-    weight: 2
+    weight: 3
 showReadingTime: false
 showWordCount: false
 showDate: false

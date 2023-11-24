@@ -26,8 +26,9 @@ Clone the source and init the submodule that pulls down the theme into `themes/b
 
 ### Install Node Dependencies
 ```
-❯ cd ./themes/blowfish
+❯ pushd ./themes/blowfish
 ❯ npm install
+❯ popd
 ```
 
 ### Run NPM CSS Compiler
