@@ -13,7 +13,12 @@ Plane Watch started with a single [Virtual Radar Server](https://github.com/vrad
 
 What started as a local initiative soon caught the attention of others. Enthusiasts from across Australia reached out, eager to contribute their ADS-B data. This growth was organic, driven by shared interests rather than a structured campaign. Our platform became particularly useful during bush-fire seasons, offering real-time information on fire-fighting aircraft.
 
-![Video showing white text on a black background scrolling very quickly.](embeds/server_load.mov "User activity logs from the VRS server during a particularly busy period of the bush-fire season.")
+{{< rawhtml >}}
+    <video title="Video showing white text on a black background scrolling very quickly." width=100% controls autoplay>
+        <source src="embeds/server_load.mp4" type="video/mp4">
+        Your browser does not support the video tag.  
+    </video>
+{{< /rawhtml >}}
 
 As more people joined, our original system began to reach its limits. We used the period of COVID lockdowns to focus on technical improvements. This led to the development of Plane Watch 2.0. We have designed and built from scratch, an entire ingest pipeline including custom ADS-B decoder, optimisation and storage backends and HTML5 Canvas-based map UI.
 
