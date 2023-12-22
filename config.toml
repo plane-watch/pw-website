@@ -1,6 +1,6 @@
-baseURL = "https://plane.watch"
+baseURL = "https://www.plane.watch"
 languageCode = "en"
-theme = "blowfish"
+theme = ["hugo-video", "blowfish"]
 resourceDir = "./resources"
 
 googleAnalytics = ""
