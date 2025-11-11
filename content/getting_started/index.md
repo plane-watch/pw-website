@@ -98,7 +98,7 @@ Where:
 You can view the container log with `docker compose logs -f planewatch`.  After about 5 minutes, the container log should show something like:
 
 ```
-planewatch-beta  | [pw-feeder] 2025-11-11T21:38:38+08:00 INF atc.plane.watch reported connection status ADSB=healthy MLAT=healthy
+planewatch  | [pw-feeder] 2025-11-11T21:38:38+08:00 INF atc.plane.watch reported connection status ADSB=healthy MLAT=healthy
 ```
 
 As seen above, this indicates that your BEAST and MLAT data is being received correctly.
