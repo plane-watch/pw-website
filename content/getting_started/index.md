@@ -118,10 +118,6 @@ There are a series of available environment variables:
 | `ENABLE_MLAT` | Optional. Set to `false` to disable MLAT | `true` |
 | `MLAT_DATASOURCE` | Optional. IP/Hostname and port of an MLAT data source | `BEASTHOST:BEASTPORT` setting if omitted |
 | `TZ` | Optional. Your local timezone | `GMT` |
-| `ACARS_HOST` | Optional. IP, hostname or container name of a TCP ACARS source (eg: acars_router) | |
-| `ACARS_PORT` | Optional. TCP port number of TCP ACARS source (eg: acars_router) | `15550` |
-| `VDLM2_HOST` | Optional. IP, hostname or container name of a TCP VDLM2 source (eg: acars_router) | |
-| `VDLM2_PORT` | Optional. TCP port number of TCP VDLM2 source (eg: acars_router) | `15555` | -->
 
 ## Logging
 
