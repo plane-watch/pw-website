@@ -54,11 +54,14 @@ Where:
 * `YOUR_LATITUDE` is the latitude of your antenna (xx.xxxxx)
 * `YOUR_LONGITUDE` is the longitude of your antenna (xx.xxxxx)
 * `YOUR_ALTITUDE` is the your antenna altitude, and should be suffixed with either m or ft. If no suffix, will default to m.
-You can test to ensure your container is seeing ADS-B data by running:
+
+You can view the container log with `docker logs -f planewatch`.  After about 5 minutes, the container log should show something like:
 
 ```
-docker exec -it planewatch viewadsb
+[pw-feeder] 2025-11-11T21:38:38+08:00 INF atc.plane.watch reported connection status ADSB=healthy MLAT=healthy
 ```
+
+As seen above, this indicates that your BEAST and MLAT data is being received correctly.
 
 ## Using Docker Compose
 
@@ -92,117 +95,13 @@ Where:
 * `YOUR_LONGITUDE` is the longitude of your antenna (xx.xxxxx)
 * `YOUR_ALTITUDE` is the your antenna altitude, and should be suffixed with either `m` or `ft`. If no suffix, will default to `m`.
 
-You can test to ensure your container is seeing ADS-B data by running:
+You can view the container log with `docker compose logs -f planewatch`.  After about 5 minutes, the container log should show something like:
 
 ```
-docker exec -it planewatch viewadsb
+planewatch-beta  | [pw-feeder] 2025-11-11T21:38:38+08:00 INF atc.plane.watch reported connection status ADSB=healthy MLAT=healthy
 ```
 
-<!-- ## Advanced Configuration
-
-[plane.watch](https://plane.watch) now supports receiving ACARS and VDLM2! If you have multiple SDRs and feel so inclined, we would love your ACARS & VDLM2 data.
-
-Here is an example configuration:
-
-```yaml
-  acarsdec:
-    image: ghcr.io/sdr-enthusiasts/docker-acarsdec:latest
-    tty: true
-    container_name: acarsdec
-    restart: always
-    devices:
-      - /dev/bus/usb:/dev/bus/usb
-    environment:
-      - TZ=YOUR_TIMEZONE
-      - SERIAL=ACARS_SERIAL
-      - FREQUENCIES=YOUR_FREQUENCIES
-      - GAIN=YOUR_GAIN
-      - SERVER=acars_router
-      - SERVER_PORT=5550
-    depends_on:
-      - acars_router
-    tmpfs:
-      - /run:exec,size=64M
-      - /var/log
-
-  dumpvdl2:
-    image: ghcr.io/sdr-enthusiasts/docker-dumpvdl2:latest
-    tty: true
-    container_name: dumpvdl2
-    restart: always
-    devices:
-      - /dev/bus/usb:/dev/bus/usb
-    environment:
-      - TZ=YOUR_TIMEZONE
-      - SERIAL=VDLM2_SERIAL
-      - FREQUENCIES=YOUR_FREQUENCIES
-      - GAIN=YOUR_GAIN
-      - SERVER=acars_router
-      - SERVER_PORT=5555
-      - ZMQ_MODE=server
-      - ZMQ_ENDPOINT=tcp://0.0.0.0:45555
-    depends_on:
-      - acars_router
-    tmpfs:
-      - /run:exec,size=64M
-      - /var/log
-
-  acars_router:
-    image: ghcr.io/sdr-enthusiasts/acars_router:latest
-    tty: true
-    container_name: acars_router
-    restart: always
-    environment:
-      - TZ=YOUR_TIMEZONE
-      - AR_SEND_UDP_ACARS=acarshub:5550
-      - AR_SEND_UDP_VDLM2=acarshub:5555
-      - AR_RECV_ZMQ_VDLM2=dumpvdl2:45555
-      - AR_OVERRIDE_STATION_NAME=YOUR_STATION_NAME
-    tmpfs:
-      - /run:exec,size=64M
-      - /var/log
-
-  planewatch:
-    image: planewatch/plane-watch:latest
-    tty: true
-    container_name: planewatch
-    restart: always
-    depends_on:
-      - readsb
-    environment:
-      - BEASTHOST=YOUR_BEASTHOST
-      - ACARS_HOST=acars_router
-      - VDLM2_HOST=acars_router
-      - TZ=YOUR_TIMEZONE
-      - API_KEY=YOUR_API_KEY
-      - LAT=YOUR_LATITUDE
-      - LONG=YOUR_LONGITUDE
-      - ALT=YOUR_ALTITUDE
-    tmpfs:
-      - /run:exec,size=64M
-      - /var/log
-```
-
-Where:
-
-* `YOUR_TIMEZONE` is your timezone in ["TZ database name" format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) (eg: `Australia/Perth`)
-* `YOUR_BEASTHOST` is the hostname, IP address or container name of a beast protocol provider (eg: `piaware`)
-* `YOUR_API_KEY` is your plane.watch feeder API Key
-* `YOUR_STATION_NAME` is the name of your station
-* `ACARS_SERIAL` the serial of your ACARS SDR
-* `VDLM2_SERIAL` the serial of your VDLM2 SDR
-* `YOUR_FREQUENCIES` the ACARS/VDLM2 frequencies
-* `YOUR_GAIN` the ACARS/VDLM2 gain
-* `YOUR_LATITUDE` is the latitude of your antenna (xx.xxxxx)
-* `YOUR_LONGITUDE` is the longitude of your antenna (xx.xxxxx)
-* `YOUR_ALTITUDE` is the your antenna altitude, and should be suffixed with either `m` or `ft`. If no suffix, will default to `m`.
-
-For more information on ACARS/VDLM2, please see:
-
-* [sdr-enthusiasts/docker-acarshub](https://github.com/sdr-enthusiasts/docker-acarshub/blob/main/README.md)
-* [sdr-enthusiasts/docker-acarsdec](https://github.com/sdr-enthusiasts/docker-acarsdec/blob/main/README.md)
-* [sdr-enthusiasts/docker-dumpvdl2](https://github.com/sdr-enthusiasts/docker-dumpvdl2/blob/main/README.md)
-* [sdr-enthusiasts/acars_router](https://github.com/sdr-enthusiasts/acars_router/blob/main/README.md) -->
+As seen above, this indicates that your BEAST and MLAT data is being received correctly.
 
 ## Environment Variables
 
